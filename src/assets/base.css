@@ -1,0 +1,36 @@
+
+@font-face {
+  font-family: 'BMZL';
+  src: url('/CKTBMZL-2.ttf') format('truetype');
+}
+
+:root {
+  --color-fg-main: #323232;
+  --color-fg-sub: #59636e;
+}
+
+html {
+  color: var(--color-fg-main);
+}
+
+body {
+  min-height: 100vh;
+  line-height: 1.6;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif;
+  font-size: 15px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
