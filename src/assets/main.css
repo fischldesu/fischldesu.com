@@ -3,6 +3,10 @@ body{
   margin: 0;
 }
 
+:root {
+  --header-height: 44px;
+}
+
 #app {
 
 }

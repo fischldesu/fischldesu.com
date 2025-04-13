@@ -1,11 +1,9 @@
-<script lang="ts">
-  export const Name = "music";
+<script setup lang="ts">
 </script>
 
 <template>
   <div class="about">
     <h1>This is an about page</h1>
-    <CButton :Type="ButtonType.Text"></CButton>
   </div>
 </template>
 
@@ -18,6 +16,4 @@
   }
 }
 </style>
-<script setup lang="ts">
-import CButton, { ButtonType } from "@/components/CButton.vue";
-</script>
+

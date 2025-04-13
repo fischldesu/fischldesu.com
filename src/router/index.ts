@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView, { SubRoutes } from '@/views/HomeView.vue'
+import HomeView from '@/views/HomeView.vue'
+import RouterRoutes from '@/router/routes'
 
 const routerRoutes = [ { path: '/', name: 'home', component: HomeView,} ];
-for (const route of SubRoutes) {
+for (const route of RouterRoutes) {
   routerRoutes.push(route);
 }
 
