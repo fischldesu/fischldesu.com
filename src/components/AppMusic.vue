@@ -3,11 +3,5 @@
 </script>
 
 <template>
-  <div>
-
-  </div>
+  <audio></audio>
 </template>
-
-<style scoped>
-
-</style>

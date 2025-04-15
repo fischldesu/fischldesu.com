@@ -1,15 +1,14 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '@/views/HomeView.vue'
-import RouterRoutes from '@/router/routes'
+import {createRouter, createWebHistory, type RouteRecordRaw} from 'vue-router';
+import HomeView from '@/views/HomeView.vue';
+import subpath from '@/router/routes';
 
-const routerRoutes = [ { path: '/', name: 'home', component: HomeView,} ];
-for (const route of RouterRoutes) {
-  routerRoutes.push(route);
-}
+const routes:Array<RouteRecordRaw> = [ { path: '/', name: 'home', component: HomeView} ];
+for (const subpath_ of subpath)
+  routes.push(subpath_);
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: routerRoutes,
-})
+  routes: routes,
+});
 
 export default router

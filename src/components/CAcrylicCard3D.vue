@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import CCard3D from "@/components/CCard3D.vue";
 
 defineProps({
-  Sensitivity: {
+  sensitivity: {
     type: Number,
     default: 16
   }
@@ -11,7 +11,7 @@ defineProps({
 
 const acrylic =  ref<HTMLElement | null>(null);
 
-function MouseMove(e:MouseEvent, rect: DOMRect) {
+function MouseMoveF(e:MouseEvent, rect: DOMRect) {
     if(acrylic.value)
     {
       const angle = getAngle(e.x - rect.x, e.y - rect.y, rect.width, rect.height);
@@ -38,7 +38,7 @@ function getAngle(
 </script>
 
 <template>
-  <CCard3D :MouseMoveCallback="MouseMove" :Sensitivity="Sensitivity">
+  <CCard3D :callback:MouseMove="MouseMoveF" :sensitivity="sensitivity">
     <div ref="acrylic" class="acrylic">
       <slot/>
     </div>

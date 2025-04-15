@@ -1,8 +1,10 @@
+import type {RouteRecordRaw} from "vue-router";
+
 import AboutView from "@/views/AboutView.vue";
 import MusicView from "@/views/MusicView.vue";
 import NavLinks from "@/views/RedirectLinks";
 
-const RouterRoutes:Array<object> = [
+const Subpath:Array<RouteRecordRaw> = [
   {
     path: '/music',
     name: 'Music',
@@ -15,5 +17,5 @@ const RouterRoutes:Array<object> = [
   }
 ];
 
-NavLinks.forEach(route => RouterRoutes.push(route))
-export default RouterRoutes;
+NavLinks.forEach(route => Subpath.push({path: route.path, component: route.component, beforeEnter: route.beforeEnter}));
+export default Subpath;

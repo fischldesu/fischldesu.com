@@ -1,38 +1,37 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import {ref, type PropType} from 'vue'
 
 const props = defineProps({
-  MouseMoveCallback:{
-    type: Function,
+  'callback:MouseMove':{
+    type: Function as PropType<(e: MouseEvent, rect: DOMRect)=>void>,
     default: null
   },
-  Sensitivity:{
+  sensitivity:{
     type: Number,
     default: 16
   }
 });
 
 const card = ref<HTMLElement | null>(null);
-const sensitivity = props.Sensitivity;
-
-let rect: DOMRect | null = null
-
-function updateTransform(rotateX: number, rotateY: number) {
-  if (card.value)
-    card.value.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`
+const sensitivity = props.sensitivity;
+const Callbacks = {
+  MouseMove: props["callback:MouseMove"],
 }
 
-function MouseMove(e: MouseEvent) {
-  if(rect)
-  {
-    const centerX = rect.left + rect.width / 2
-    const centerY = rect.top + rect.height / 2
-    requestAnimationFrame(() => {
-      updateTransform(-((e.clientY - centerY) / sensitivity), (e.clientX - centerX) / sensitivity)
-      if(props.MouseMoveCallback)
-        props.MouseMoveCallback(e, rect);
-    })
-  }
+let rect = new DOMRect();
+
+function AnimateTransform(rotateX: number, rotateY: number) {
+  if (card.value)
+    card.value.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+}
+
+function OnMouseMove(e: MouseEvent) {
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+  requestAnimationFrame(() => {
+    AnimateTransform(Math.floor(-((e.clientY - centerY) / sensitivity)), Math.floor((e.clientX - centerX) / sensitivity))
+    Callbacks.MouseMove(e, rect);
+  });
 }
 
 function UpdateRect() {
@@ -40,26 +39,15 @@ function UpdateRect() {
     rect = card.value.getBoundingClientRect()
 }
 
-function resetTransform() {
+function ResetTransform() {
   if (card.value)
     card.value.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)'
 }
 
-onMounted(() => {
-  UpdateRect()
-  window.addEventListener('resize', UpdateRect);
-  window.addEventListener('scroll', UpdateRect);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('resize', UpdateRect);
-  window.removeEventListener('scroll', UpdateRect);
-});
-
 </script>
 
 <template>
-  <div class="card-3d-container" @mousemove="MouseMove" @mouseleave="resetTransform">
+  <div class="card-3d-container" @mousemove="OnMouseMove" @mouseenter="UpdateRect" @mouseleave="ResetTransform">
     <div ref="card" class="card-3d" @resize="UpdateRect">
       <slot />
     </div>

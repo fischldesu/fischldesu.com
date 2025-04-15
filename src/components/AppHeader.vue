@@ -6,7 +6,7 @@ import ACHeaderFlyout from "@/components/ACHeaderFlyout.vue";
 
 const headerFlyout = ref<HTMLElement | null>(null);
 const displayFlyout = ref(false);
-const hoverCancellationToken = ref(false);
+const displayFlyoutTimer = ref(0);
 const route = useRoute();
 
 const intersectionObserver = new IntersectionObserver((entries) => {
@@ -38,37 +38,33 @@ function Refresh() {
 }
 
 function ClickDisplayFlyout() {
-  hoverCancellationToken.value = true;
+  CancelDisplayFlyoutDelay();
   if(route.path === '/')
-  {
     displayFlyout.value = true;
-  }
-
+  else
+     DisplayFlyout_Delay(true, 1000);
 }
 
-function HoverDisplayFlyout(display_:boolean) {
+function DisplayFlyout_Delay(display_:boolean, delay = 600) {
   if(display_) {
-    hoverCancellationToken.value = false;
-    setTimeout(()=>{
-      if(!hoverCancellationToken.value) {
-        document.querySelector('header')?.classList.add('display');
-        displayFlyout.value = true;
-      }
-    }, 600);
+    displayFlyoutTimer.value = setTimeout(()=>{
+      document.querySelector('header')?.classList.add('display');
+      displayFlyout.value = true;
+    }, delay);
   } else {
-    hoverCancellationToken.value = true;
+    CancelDisplayFlyoutDelay();
     displayFlyout.value = false;
   }
 }
 
-function CancelHoverDisplay() {
-  hoverCancellationToken.value = true;
+function CancelDisplayFlyoutDelay() {
+  clearTimeout(displayFlyoutTimer.value);
 }
 
 </script>
 
 <template>
-  <header @mouseleave="HoverDisplayFlyout(false)">
+  <header @mouseleave="DisplayFlyout_Delay(false)">
     <nav>
       <div class="links">
         <router-link
@@ -76,8 +72,8 @@ function CancelHoverDisplay() {
           to="/"
           @dblclick="Refresh"
           @click="ClickDisplayFlyout"
-          @mouseenter="HoverDisplayFlyout(true)"
-          @mouseleave="CancelHoverDisplay"
+          @mouseenter="DisplayFlyout_Delay(true)"
+          @mouseleave="CancelDisplayFlyoutDelay"
         ><!-- i/b:未处理:键盘Tab -->
           <IconHome class="icon" />fischldesu.com
         </router-link>

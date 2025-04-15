@@ -1,11 +1,11 @@
 export default function AppMusic():HTMLAudioElement {
-  let ele = document.getElementById('app-music') as HTMLAudioElement;
-  if (!ele){
-    ele = document.createElement('audio');
-    ele.id = 'app-music';
+  let music = document.getElementById('app-music') as HTMLAudioElement;
+  if (!music){
+    music = document.createElement<'audio'>('audio');
+    music.id = 'app-music';
     const mainElement = document.getElementById('app-main');
     if (mainElement)
-      mainElement.appendChild(ele);
+      mainElement.insertBefore(document.getElementById('') as HTMLElement, music);
   }
-  return ele;
+  return music;
 }

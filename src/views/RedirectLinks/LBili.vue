@@ -6,7 +6,7 @@ import CNavLink from "@/components/CNavLink.vue";
 export const meta = {
   redirect: 'https://space.bilibili.com/508358490',
   name: 'Bilibili 哔哩哔哩'
-}
+};
 </script>
 
 <template>
