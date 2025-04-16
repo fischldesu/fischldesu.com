@@ -47,9 +47,7 @@ function getAngle(
 
 <style scoped>
 .acrylic {
-  backdrop-filter: blur(8px);
   box-shadow: 4px 4px 16px rgba(32, 32, 32, 0.4);
-  border: 1px solid aliceblue;
   border-radius: 8px;
   transition: all 0.3s ease;
   background: linear-gradient(45deg, rgba(240, 247, 255, 0.6), rgba(0, 0, 0, 0.2));

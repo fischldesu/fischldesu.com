@@ -7,6 +7,9 @@
     <ul>
       站点导航
       <li>
+        <router-link class="link-item" to="/">Home 主页</router-link>
+      </li>
+      <li>
         <router-link class="link-item" to="/blog">Blog 博客</router-link>blog.fischldesu.com
       </li>
       <li>
