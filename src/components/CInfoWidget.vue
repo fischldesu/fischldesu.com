@@ -7,8 +7,3 @@ import CAcrylicWidget from "@/components/CAcrylicWidget.vue";
     <slot />
   </CAcrylicWidget>
 </template>
-
-<style scoped>
-
-
-</style>

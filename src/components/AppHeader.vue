@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useSettingsDialog } from '@/elements';
 import { useRoute } from "vue-router";
 import IconHome from "@/components/icons/IconHome.vue";
 import ACHeaderFlyout from "@/components/ACHeaderFlyout.vue";
@@ -61,10 +62,15 @@ function CancelDisplayFlyoutDelay() {
   clearTimeout(displayFlyoutTimer.value);
 }
 
+function ContextMenu(e:Event) {
+  e.preventDefault();
+  useSettingsDialog().Open(true);
+}
+
 </script>
 
 <template>
-  <header @mouseleave="DisplayFlyout_Delay(false)">
+  <header @mouseleave="DisplayFlyout_Delay(false)" @contextmenu="ContextMenu">
     <nav>
       <div class="links">
         <router-link
