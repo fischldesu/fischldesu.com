@@ -2,6 +2,8 @@
 import {ref, onMounted, watch} from "vue";
 import { useWeather, useLocation, type WeatherInfo } from "@/util/Weather";
 import CInfoWidget from "@/components/CInfoWidget.vue";
+import CDialog from "@/components/CDialog.vue";
+import {useReference} from "@/elements";
 
 interface WeatherData {
   name: string;
@@ -12,6 +14,7 @@ interface WeatherData {
 const weather = useWeather();
 const location = useLocation();
 const weatherDisplay = ref<WeatherData | null>(null);
+const moreInfoDialog = useReference(CDialog);
 
 async function UpdateWeather() {
   const sheng = location.sheng;
@@ -39,12 +42,15 @@ watch(location.Ref, UpdateWeather);
 
 <template>
   <CInfoWidget class="">
-    <div class="weather-info" v-if="weatherDisplay">
+    <div class="weather-info" v-if="weatherDisplay" @click="moreInfoDialog?.Show(true)">
       <p>{{weatherDisplay.name}}</p>
       <p>{{weatherDisplay.temperature}}℃</p>
       <p>{{weatherDisplay.weather}}</p>
     </div>
     <div v-else @click="UpdateWeather">无天气信息<br>点击尝试获取</div>
+    <CDialog ref="moreInfoDialog" title="天气">
+
+    </CDialog>
   </CInfoWidget>
 </template>
 

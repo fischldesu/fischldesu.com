@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import {onMounted, ref} from "vue";
 defineProps({
   title:{
     type: String,
@@ -13,12 +13,46 @@ defineProps({
 
 const dialogElement = ref<HTMLDialogElement | null>(null);
 
-function CloseDialog() {
+function Show(modal: boolean) {
+  const dialog = dialogElement.value;
+  if (modal) dialog?.showModal();
+  else dialog?.show();
+}
+
+function Close() {
   dialogElement.value?.close();
 }
 
+function PreventEvent(e:WheelEvent) {
+  e.preventDefault();
+}
+
+function Init(dialog:HTMLDialogElement) {
+
+  const show_ = HTMLDialogElement.prototype.showModal.bind(dialog);
+  const close_ = HTMLDialogElement.prototype.close.bind(dialog);
+  dialog.showModal = ()=>{
+    document.body.addEventListener('wheel', PreventEvent, {passive: false});
+    show_();
+  }
+
+  dialog.close = ()=>{
+    close_();
+    document.body.removeEventListener('wheel', PreventEvent);
+  }
+
+}
+
+onMounted(()=>{
+  const dialog = dialogElement.value;
+  if(dialog)
+    Init(dialog);
+})
+
+
 defineExpose({
-  CloseDialog,
+  Close,
+  Show,
   Dialog : dialogElement
 })
 
@@ -27,9 +61,8 @@ defineExpose({
 <template>
   <dialog ref="dialogElement" class="dialog">
     <slot/>
-<!--    <div class="dialog-content"></div>-->
     <p class="title-text">{{ title }}</p>
-    <button v-if="closeButton" class="close-btn" @click="CloseDialog">⨉</button>
+    <button v-if="closeButton" class="close-btn" @click="Close">⨉</button>
   </dialog>
 </template>
 

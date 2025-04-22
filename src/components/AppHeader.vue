@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useSettingsDialog } from '@/elements';
+import { useReference, useSettingsDialog } from '@/elements';
 import { useRoute } from "vue-router";
 import IconHome from "@/components/icons/IconHome.vue";
 import ACHeaderFlyout from "@/components/ACHeaderFlyout.vue";
 
-const headerFlyout = ref<HTMLElement | null>(null);
-const displayFlyout = ref(false);
-const displayFlyoutTimer = ref(0);
+const headerFlyout = useReference(ACHeaderFlyout);
+const headerFlyoutDisplay = ref(false);
+const headerFlyoutDisplayDelayTimer = ref(0);
 const route = useRoute();
 
 const intersectionObserver = new IntersectionObserver((entries) => {
@@ -15,7 +15,7 @@ const intersectionObserver = new IntersectionObserver((entries) => {
   if(header)
     if(entries[0].isIntersecting) {
       header.classList.remove('display');
-      displayFlyout.value = false;
+      headerFlyoutDisplay.value = false;
     } else {
       header.classList.add('display');
     }
@@ -41,30 +41,31 @@ function Refresh() {
 function ClickDisplayFlyout() {
   CancelDisplayFlyoutDelay();
   if(route.path === '/')
-    displayFlyout.value = true;
+    headerFlyoutDisplay.value = true;
   else
      DisplayFlyout_Delay(true, 1000);
 }
 
 function DisplayFlyout_Delay(display_:boolean, delay = 600) {
   if(display_) {
-    displayFlyoutTimer.value = setTimeout(()=>{
+    headerFlyoutDisplayDelayTimer.value = setTimeout(()=>{
       document.querySelector('header')?.classList.add('display');
-      displayFlyout.value = true;
+      headerFlyout.value?.Show();
+      headerFlyoutDisplay.value = true;
     }, delay);
   } else {
     CancelDisplayFlyoutDelay();
-    displayFlyout.value = false;
+    headerFlyoutDisplay.value = false;
   }
 }
 
 function CancelDisplayFlyoutDelay() {
-  clearTimeout(displayFlyoutTimer.value);
+  clearTimeout(headerFlyoutDisplayDelayTimer.value);
 }
 
 function ContextMenu(e:Event) {
   e.preventDefault();
-  useSettingsDialog().Open(true);
+  useSettingsDialog().Open();
 }
 
 </script>
@@ -87,9 +88,9 @@ function ContextMenu(e:Event) {
           About
         </router-link>
       </div>
-      <div class="info" :class="{'display': displayFlyout}">
+      <div class="info" :class="{'display': headerFlyoutDisplay}">
         <div class="flyout-container">
-          <ACHeaderFlyout ref="headerFlyout" class="flyout"/>
+          <ACHeaderFlyout :TabAble="headerFlyoutDisplay" ref="headerFlyout" class="flyout" />
         </div>
       </div>
     </nav>
