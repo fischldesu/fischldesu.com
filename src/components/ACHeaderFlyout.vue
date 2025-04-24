@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import {useReference} from "@/elements";
+import { computed } from "vue";
 
-defineProps({
+const props = defineProps({
   TabAble: {
     type: Boolean
   }
@@ -9,6 +10,9 @@ defineProps({
 
 const UL = useReference(HTMLUListElement);
 const displayAnimationCancellationTokens:Array<number> = [];
+const tabAble = computed(()=>{
+  return props.TabAble?1:-1;
+})
 
 function DisplayAnimation(ele: HTMLElement) {
   requestAnimationFrame(()=>{
@@ -51,22 +55,22 @@ defineExpose({
     <ul ref="UL">
       站点导航
       <li>
-        <router-link :tabindex="TabAble?1:-1" class="link-item" to="/">Home 主页</router-link>
+        <router-link :tabindex="tabAble" class="link-item" to="/">Home 主页</router-link>
       </li>
       <li>
-        <router-link :tabindex="TabAble?1:-1" class="link-item" to="/blog">Blog 博客</router-link>blog.fischldesu.com
+        <router-link :tabindex="tabAble" class="link-item" to="/blog">Blog 博客</router-link>blog.fischldesu.com
       </li>
       <li>
-        <router-link :tabindex="TabAble?1:-1" class="link-item" to="/github">Github</router-link>github@fischldesu
+        <router-link :tabindex="tabAble" class="link-item" to="/github">Github</router-link>github@fischldesu
       </li>
       <li>
-        <router-link :tabindex="TabAble?1:-1" class="link-item" to="/bili">Bilibili 哔哩哔哩</router-link>bilibili@fischldesu.com
+        <router-link :tabindex="tabAble" class="link-item" to="/bili">Bilibili 哔哩哔哩</router-link>bilibili@fischldesu.com
       </li>
       <li>
-        <router-link :tabindex="TabAble?1:-1" class="link-item" to="/repo">Collections</router-link>repo.fischldesu.com
+        <router-link :tabindex="tabAble" class="link-item" to="/repo">Collections</router-link>repo.fischldesu.com
       </li>
       <li>
-        <router-link :tabindex="TabAble?1:-1" class="link-item" to="/about">About 关于</router-link>About this website
+        <router-link :tabindex="tabAble" class="link-item" to="/about">About 关于</router-link>About this website
       </li>
     </ul>
   </section>

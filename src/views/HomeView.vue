@@ -3,6 +3,7 @@ import {computed} from "vue";
 import { useAppBackgroundURL } from "@/elements";
 import ICContactWidget from "@/components/ICContactWidget.vue";
 import ICWeatherWidget from "@/components/ICWeatherWidget.vue";
+import CScrollingView from "@/components/CScrollingView.vue";
 
 const bgURL = useAppBackgroundURL().Ref;
 const bgStyle = computed(()=>{
@@ -21,7 +22,10 @@ const bgStyle = computed(()=>{
         <ICContactWidget class="bar-widget"/>
       </div>
     </section>
-    <section style="height:100vh">
+    <section>
+      <CScrollingView>
+        
+      </CScrollingView>
     </section>
     <div class="background-image" :style="bgStyle"></div>
   </div>
