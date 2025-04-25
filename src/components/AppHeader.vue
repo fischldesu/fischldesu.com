@@ -10,6 +10,38 @@ const headerFlyoutDisplay = ref(false);
 const headerFlyoutDisplayDelayTimer = ref(0);
 const route = useRoute();
 
+const flyoutData = [
+  {
+    name: 'Home 主页',
+    href: '/'
+  },
+  {
+    name: 'Blog 博客',
+    href: '/blog',
+    info: 'blog.fischldesu.com',
+  },
+  {
+    name: 'Bilibili',
+    href: '/bili',
+    info: 'bilibili@fischldesu',
+  },
+  {
+    name: 'Github',
+    href: '/github',
+    info: 'github@fischldesu',
+  },
+  {
+    name: 'Collection',
+    href: '/repo',
+    info: 'repo.fischldesu.com',
+  },
+  {
+    name: 'About',
+    href: '/about',
+    info: 'About this Website',
+  }
+];
+
 const intersectionObserver = new IntersectionObserver((entries) => {
   const header = document.querySelector('header');
   if(header)
@@ -40,8 +72,10 @@ function Refresh() {
 
 function ClickDisplayFlyout() {
   CancelDisplayFlyoutDelay();
-  if(route.path === '/')
+  if(route.path === '/') {
+    headerFlyout.value?.Show();
     headerFlyoutDisplay.value = true;
+  }
   else
      DisplayFlyout_Delay(true, 1000);
 }
@@ -90,7 +124,7 @@ function ContextMenu(e:Event) {
       </div>
       <div class="info" :class="{'display': headerFlyoutDisplay}">
         <div class="flyout-container">
-          <ACHeaderFlyout :TabAble="headerFlyoutDisplay" ref="headerFlyout" class="flyout" />
+          <ACHeaderFlyout :TabAble="headerFlyoutDisplay" :LinkItems="flyoutData" ref="headerFlyout" class="flyout" />
         </div>
       </div>
     </nav>

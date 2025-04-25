@@ -1,28 +1,50 @@
 <script setup lang="ts">
-import {useReference} from "@/elements";
+import { useReference } from "@/elements";
 import { computed } from "vue";
 
+interface LinkItemData {
+  name: string;
+  href: string;
+  info?: string;
+}
+
 const props = defineProps({
+  LinkItems: {
+    type: Array as () => LinkItemData[],
+    required: true,
+  },
   TabAble: {
     type: Boolean
   }
 });
 
 const UL = useReference(HTMLUListElement);
-const displayAnimationCancellationTokens:Array<number> = [];
+const displayCancellationTokens:Array<number> = [];
+const animateCancellationTokens:Array<number> = [];
 const tabAble = computed(()=>{
   return props.TabAble?1:-1;
 })
 
-function DisplayAnimation(ele: HTMLElement) {
-  requestAnimationFrame(()=>{
-    //暂时不解决
-    ele.style.opacity = '1';
-  })
+function DisplayAnimation(ele: HTMLElement, totalStep:number = 30) {
+  // animateCancellationTokens.forEach(token=> cancelAnimationFrame(token));
+  let val:number = 0.1;
+  const singleStep = totalStep / 1000;
+  const animate = ()=>{
+    val += singleStep;
+    if(val > 1) {
+      val = 1;
+      ele.style.opacity = '1';
+      return;
+    } else {
+      ele.style.opacity = `${val}`;
+      animateCancellationTokens.push(requestAnimationFrame(animate));
+    }
+  }
+  animate();
 }
 
 function f(ele:HTMLElement, delay:number) {
-  displayAnimationCancellationTokens.push(
+  displayCancellationTokens.push(
     setTimeout(()=>DisplayAnimation(ele), delay));
 }
 
@@ -33,15 +55,15 @@ function Show(delay:number = 64) {
     for (let i = 0; i < arrLI.length; i++) {
       const ele = arrLI[i] as HTMLElement;
       ele.style.opacity = '0';
-      displayAnimationCancellationTokens.push(
+      displayCancellationTokens.push(
         setTimeout(()=>f(ele, i * delay), delay * 3));
     }
   }
 }
 
 function CancelDisplayAnimation() {
-  displayAnimationCancellationTokens.forEach(token=> clearTimeout(token));
-  displayAnimationCancellationTokens.length = 0;
+  displayCancellationTokens.forEach(token=> clearTimeout(token));
+  displayCancellationTokens.length = 0;
 }
 
 defineExpose({
@@ -54,23 +76,8 @@ defineExpose({
   <section class="flyout">
     <ul ref="UL">
       站点导航
-      <li>
-        <router-link :tabindex="tabAble" class="link-item" to="/">Home 主页</router-link>
-      </li>
-      <li>
-        <router-link :tabindex="tabAble" class="link-item" to="/blog">Blog 博客</router-link>blog.fischldesu.com
-      </li>
-      <li>
-        <router-link :tabindex="tabAble" class="link-item" to="/github">Github</router-link>github@fischldesu
-      </li>
-      <li>
-        <router-link :tabindex="tabAble" class="link-item" to="/bili">Bilibili 哔哩哔哩</router-link>bilibili@fischldesu.com
-      </li>
-      <li>
-        <router-link :tabindex="tabAble" class="link-item" to="/repo">Collections</router-link>repo.fischldesu.com
-      </li>
-      <li>
-        <router-link :tabindex="tabAble" class="link-item" to="/about">About 关于</router-link>About this website
+      <li v-for="linkItem in LinkItems" :key="linkItem.href" class="link-item-container">
+        <router-link :tabindex="tabAble" class="link-item" :to="linkItem.href">{{ linkItem.name }}</router-link> {{ linkItem.info }}
       </li>
     </ul>
   </section>
