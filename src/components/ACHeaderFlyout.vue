@@ -43,7 +43,7 @@ function DisplayAnimation(ele: HTMLElement, totalStep:number = 30) {
   animate();
 }
 
-function f(ele:HTMLElement, delay:number) {
+function DisplayAnimationEntry(ele:HTMLElement, delay:number) {
   displayCancellationTokens.push(
     setTimeout(()=>DisplayAnimation(ele), delay));
 }
@@ -56,7 +56,7 @@ function Show(delay:number = 64) {
       const ele = arrLI[i] as HTMLElement;
       ele.style.opacity = '0';
       displayCancellationTokens.push(
-        setTimeout(()=>f(ele, i * delay), delay * 3));
+        setTimeout(()=>DisplayAnimationEntry(ele, i * delay), delay * 3));
     }
   }
 }

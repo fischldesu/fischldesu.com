@@ -2,47 +2,41 @@
 import { useReference } from '@/elements';
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 
-const props = defineProps({
-  Callback: {
-    type: Function,
-    default: null,
-  }
-})
+const emit = defineEmits(['ViewScrolling', 'ViewEnter', 'ViewLeave']);
 
-const ob = new IntersectionObserver(entries=>{
-  let top = false;
-  let bot = false;
-  
-  entries.forEach(entry=>{
-    if(entry.target === marginTop.value) {
-      top = entry.isIntersecting;
-    } else if(entry.target === marginBot.value) {
-      bot = entry.isIntersecting;
-    }
-  });
+const ob = new IntersectionObserver(()=>{
 
-  if(top || bot) {
+  const rectTop = marginTop.value?.getBoundingClientRect() as DOMRect;
+  const rectBot = marginBot.value?.getBoundingClientRect() as DOMRect;
+  const topInside = rectTop.top > 0 && rectTop.top < window.innerHeight;
+  const botInside = rectBot.bottom < window.innerHeight && rectBot.bottom > 0;
+
+  if(topInside || botInside) {
     window.addEventListener('resize', onGeometryChanged);
     window.addEventListener('scroll', onGeometryChanged);
     onGeometryChanged();
-  } else {
+  }
+  else if(topInside && !botInside) emit('ViewEnter');
+  else if(!topInside && botInside) emit('ViewLeave');
+  else {
     window.removeEventListener('resize', onGeometryChanged);
     window.removeEventListener('scroll', onGeometryChanged);
     onGeometryChanged();
   }
+
 });
 
-const ele = useReference(HTMLDivElement);
+const displayingElement = useReference(HTMLDivElement);
 const marginTop = useReference(HTMLDivElement);
 const marginBot = useReference(HTMLDivElement);
 
-const geometry = ref(new DOMRect(0, 0, 0, 0));
+const geometry = ref<DOMRect>(new DOMRect(0, 0, 0, 0));
 
 function onGeometryChanged() {
-  geometry.value = ele.value?.getBoundingClientRect() || new DOMRect(0, 0, 0, 0);
+  geometry.value = displayingElement.value?.getBoundingClientRect() || new DOMRect();
 }
 
-watch(geometry, val=>{if(props.Callback) props.Callback(val)});
+watch(geometry, val=>{emit('ViewScrolling', val)});
 
 onMounted(()=>{
   const eleTop = marginTop.value;
@@ -63,15 +57,15 @@ onUnmounted(()=>{
 });
 
 defineExpose({
-  ele,
+  ele: displayingElement,
   geometry,
 });
 </script>
 
 <template>
-  <div class="scrolling-view">
+  <div class="scrolling-view" ref="displayingElement">
     <div ref="marginTop" class="scrolling-view-margin scrolling-view-margin-top"></div>
-    <slot ref="ele" class="content"></slot>
+    <slot/>
     <div ref="marginBot" class="scrolling-view-margin scrolling-view-margin-bottom"></div>
   </div>
 </template>
@@ -84,6 +78,12 @@ defineExpose({
 .scrolling-view-margin {
   height: 0 !important;
   width: 100%;
+  max-height: 0;
+
+}
+
+.scrolling-view>*:not(.scrolling-view-margin) {
+  overflow: hidden;
 }
 
 </style>

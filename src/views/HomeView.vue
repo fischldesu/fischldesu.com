@@ -1,16 +1,35 @@
 <script setup lang="ts">
-import {computed} from "vue";
-import { useAppBackgroundURL } from "@/elements";
+import {useAppBackgroundURL, useReference} from "@/elements";
 import ICContactWidget from "@/components/ICContactWidget.vue";
 import ICWeatherWidget from "@/components/ICWeatherWidget.vue";
 import CScrollingView from "@/components/CScrollingView.vue";
+import CCarouselGallery from "@/components/CCarouselGallery.vue";
+import {ref} from "vue";
 
-const bgURL = useAppBackgroundURL().Ref;
-const bgStyle = computed(()=>{
-  return {
-    backgroundImage: `url(${bgURL.value})`
-  }
-});
+const backgroundImgURL = useAppBackgroundURL().Ref;
+
+const page2_gallery = useReference(CCarouselGallery);
+const page2_gallery_images = ref(['']);
+
+function scrolling_p1(geometry: DOMRect) {
+  const windowHeight = window.innerHeight;
+  const percentage = Math.max(0,
+    Math.min(100,
+      (windowHeight - geometry.top) / (windowHeight + geometry.height) * 100)) * 2;
+  requestAnimationFrame(()=> page2_gallery.value?.MoveTo(parseInt(percentage)))
+}
+
+
+function LoadImages() {
+  fetch('https://static.fischldesu.com/img/fischl/list.json').then(
+    data=>{ return data.json() }
+  ).then(json=>{
+    page2_gallery_images.value = json.map((img:string) =>
+      `https://static.fischldesu.com/img/fischl/${img}`);
+  });
+}
+
+LoadImages();
 
 </script>
 
@@ -23,11 +42,11 @@ const bgStyle = computed(()=>{
       </div>
     </section>
     <section>
-      <CScrollingView>
-        
+      <CScrollingView @ViewScrolling="scrolling_p1" style="height: 100vh">
+        <CCarouselGallery ref="page2_gallery" :Images="page2_gallery_images" :Height="50" />
       </CScrollingView>
     </section>
-    <div class="background-image" :style="bgStyle"></div>
+    <div class="background-image" :style="{backgroundImage: `url(${backgroundImgURL})`}"></div>
   </div>
 </template>
 
