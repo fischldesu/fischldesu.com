@@ -12,21 +12,21 @@ const page2_gallery = useReference(CCarouselGallery);
 const page2_gallery_images = ref(['']);
 
 function scrolling_p1(geometry: DOMRect) {
-  const windowHeight = window.innerHeight;
-  const percentage = Math.max(0,
-    Math.min(100,
-      (windowHeight - geometry.top) / (windowHeight + geometry.height) * 100)) * 2;
-  requestAnimationFrame(()=> page2_gallery.value?.MoveTo(parseInt(percentage)))
+  // const windowHeight = window.innerHeight;
+  // const percentage = Math.max(0,
+  //   Math.min(100,
+  //     (windowHeight - geometry.top) / (windowHeight + geometry.height) * 100)) * 2;
+  // requestAnimationFrame(()=> page2_gallery.value?.MoveTo(Math.floor(percentage)))
 }
 
 
 function LoadImages() {
-  fetch('https://static.fischldesu.com/img/fischl/list.json').then(
-    data=>{ return data.json() }
-  ).then(json=>{
-    page2_gallery_images.value = json.map((img:string) =>
-      `https://static.fischldesu.com/img/fischl/${img}`);
-  });
+  // fetch('https://static.fischldesu.com/img/fischl/list.json').then(
+  //   data=>{ return data.json() }
+  // ).then(json=>{
+  //   page2_gallery_images.value = json.map((img:string) =>
+  //     `https://static.fischldesu.com/img/fischl/${img}`);
+  // });
 }
 
 LoadImages();
@@ -51,12 +51,6 @@ LoadImages();
 </template>
 
 <style scoped>
-.home {
-  width: 100%;
-  margin-top: calc(0px - var(--header-height));
-  padding-top: var(--header-height);
-}
-
 .home>.background-image {
   width: 100%;
   height: 100vh;

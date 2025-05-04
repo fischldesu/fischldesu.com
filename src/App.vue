@@ -26,11 +26,22 @@ onMounted(()=>{
 </template>
 
 <style scoped>
+main {
+  width: 100%;
+  flex: 1;
+  margin-top: calc(0px - var(--header-height));
+  padding-top: var(--header-height);
+}
+
 #app-header {
   z-index: 10;
 }
 
 #app-main {
+  z-index: 4;
+}
+
+#app-footer {
   z-index: 5;
 }
 
