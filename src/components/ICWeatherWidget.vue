@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import {ref, onMounted, watch} from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useWeather, useLocation, type WeatherInfo } from "@/util/Weather";
+import { useReference } from "@/elements";
 import CInfoWidget from "@/components/CInfoWidget.vue";
 import CDialog from "@/components/CDialog.vue";
-import {useReference} from "@/elements";
 
 interface WeatherData {
   name: string;
@@ -47,7 +47,7 @@ watch(location.Ref, UpdateWeather);
       <p>{{weatherDisplay.temperature}}℃</p>
       <p>{{weatherDisplay.weather}}</p>
     </div>
-    <div v-else @click="UpdateWeather">无天气信息<br>点击尝试获取</div>
+    <div class="null-weather-data" v-else @click="UpdateWeather">未设置天气信息<br>点击尝试获取</div>
     <CDialog ref="moreInfoDialog" title="天气">
 
     </CDialog>
@@ -57,5 +57,12 @@ watch(location.Ref, UpdateWeather);
 <style scoped>
 .weather-info {
   padding: 14px;
+}
+.null-weather-data {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 </style>

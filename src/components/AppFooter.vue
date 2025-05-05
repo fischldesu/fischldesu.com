@@ -13,9 +13,9 @@
     <img title="fischl-portrait" src="https://static.fischldesu.com/files/img/102011714_p0.png" alt="">
     <div class="bottom">
       <div>
-        <router-link to="/map" class="clickable">SiteMap</router-link>
-        <a href="https://beian.miit.gov.cn" class="clickable">蜀ICP备2025120962号-1</a>
-        <router-link to="/about" class="clickable">© fischldesu 2025</router-link>
+        <router-link title="site map" to="/map" class="clickable">SiteMap</router-link>
+        <a title="备案信息查询" target="_blank" href="https://beian.miit.gov.cn" class="clickable">蜀ICP备2025120962号-1</a>
+        <router-link title="关于" to="/about" class="clickable">© fischldesu 2025</router-link>
       </div>
     </div>
   </footer>
