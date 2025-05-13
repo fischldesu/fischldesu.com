@@ -42,7 +42,7 @@ function Submit() {
         <li>
           <span>地址</span>
           <span>
-            <input ref="inputBgURL" style="width: calc(100% - 8px); float: right"/>
+            <input ref="inputBgURL"/>
           </span>
         </li>
         <li>
@@ -55,7 +55,7 @@ function Submit() {
         <li class="title">天气</li>
         <li>
           <span>位置检测</span>
-          <button>获取定位</button>
+          <span><button>获取定位</button></span>
         </li>
         <li>
           <span>位置设置</span>
@@ -72,13 +72,12 @@ function Submit() {
 
 <style scoped>
 .app-settings-content {
-  padding: 48px 16px 16px 16px;
+  padding: 38px 16px 16px 16px;
 }
 
 .app-settings>.app-settings-content {
   height: 100%;
   width: 100%;
-
 }
 
 .submit-btn{
@@ -86,6 +85,76 @@ function Submit() {
   right: 16px;
   bottom: 16px;
   height: 30px;
+}
+
+li.title {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+li {
+  margin-top: 3px;
+  font-size: 14px;
+  height: 26px;
+  display: flex;
+}
+
+li>span {
+  height: 100%;
+  line-height: 26px;
+}
+
+li>span:first-child {
+  width: 100px;
+}
+
+li>span:last-child {
+  flex: 1;
+  display: flex;
+  gap: 8px;
+}
+
+li>span>* {
+  height: 100%;
+  flex: 1;
+}
+
+li>span>*:only-child {
+  width: 100%;
+}
+
+input {
+  border-radius: 4px;
+  border: 2px inset rgb(64, 64, 64);
+  min-width: 0;
+  width: 100%;
+  padding: 0 6px;
+}
+
+button {
+  display: inline-block;
+  outline: 0;
+  border: 0;
+  cursor: pointer;
+  will-change: box-shadow,transform;
+  background: radial-gradient( 100% 100% at 100% 0%, #89E5FF 0%, #5468FF 100% );
+  box-shadow: 0px 0.01em 0.01em rgb(45 35 66 / 40%), 0px 0.3em 0.7em -0.01em rgb(45 35 66 / 30%), inset 0px -0.01em 0px rgb(58 65 111 / 50%);
+  padding: 0 14px;
+  border-radius: 0.3em;
+  color: #fff;
+  text-shadow: 0 1px 0 rgb(0 0 0 / 40%);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+button:hover {
+  box-shadow: 0px 0.1em 0.2em rgb(45 35 66 / 40%), 0px 0.4em 0.7em -0.1em rgb(45 35 66 / 30%), inset 0px -0.1em 0px #3c4fe0;
+  transform: translateY(-0.1em);
+}
+
+button:active {
+  box-shadow: inset 0px 0.1em 0.6em #3c4fe0;
+  transform: translateY(0em);
 }
 
 </style>

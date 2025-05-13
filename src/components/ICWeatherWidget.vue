@@ -17,12 +17,15 @@ const weatherDisplay = ref<WeatherData | null>(null);
 const moreInfoDialog = useReference(CDialog);
 
 async function UpdateWeather() {
-  const sheng = location.sheng;
-  const city = location.city;
-  if(sheng.length > 0 && city.length > 0) {
-    const rp = await weather.GET_Default(sheng, city)
-    SetWeather(rp);
+  let sheng = location.sheng;
+  let city = location.city;
+  if(sheng.length <= 0 || city.length <= 0)  {
+    sheng = '北京';
+    city = '北京';
+    console.log("获取天气失败，使用默认位置");
   }
+  const rp = await weather.GET_Default(sheng, city)
+  SetWeather(rp);
 }
 
 function SetWeather(info:WeatherInfo | null) {
