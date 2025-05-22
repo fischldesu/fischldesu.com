@@ -4,7 +4,7 @@
 
 <template>
   <div class="about-view">
-    this is a About page.
+    <h1>About</h1>
   </div>
 </template>
 
