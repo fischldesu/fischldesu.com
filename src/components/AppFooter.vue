@@ -132,8 +132,7 @@ footer>.bottom>div>* {
   }
 
   footer>img {
-    bottom: 55%;
-    transform: translateY(50%);
+    top: 0;
     left: unset;
     right: 16px;
   }
