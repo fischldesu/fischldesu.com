@@ -7,6 +7,7 @@ import CCarouselGallery from "@/components/CCarouselGallery.vue";
 import {ref} from "vue";
 
 const backgroundImgURL = useAppBackgroundURL().Ref;
+const backgroundMinImgURL = useAppBackgroundURL().DefaultMinURL;
 
 const page2_gallery = useReference(CCarouselGallery);
 const page2_gallery_images = ref(['']);
@@ -46,12 +47,14 @@ LoadImages();
         <CCarouselGallery ref="page2_gallery" :Images="page2_gallery_images" :Height="50" />
       </CScrollingView>
     </section>
-    <div class="background-image" :style="{backgroundImage: `url(${backgroundImgURL})`}"></div>
+    <div class="background-image-holder" :style="{backgroundImage: `url(${backgroundMinImgURL})`}">
+      <div class="background-image" :style="{backgroundImage: `url(${backgroundImgURL})`}"></div>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.home>.background-image {
+.home>.background-image-holder {
   width: 100%;
   height: 100vh;
   position: fixed;
@@ -61,7 +64,12 @@ LoadImages();
   background-position: 40%;
   background-size: cover;
 }
-
+.home>.background-image-holder>.background-image {
+  width: 100%;
+  height: 100%;
+    background-position: 40%;
+  background-size: cover;
+}
 .home>section:first-child {
   margin-top: calc(0px - var(--header-height));
   padding-top: var(--header-height);

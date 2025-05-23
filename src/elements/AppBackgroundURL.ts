@@ -1,6 +1,7 @@
 import { ref } from "vue";
 
 const AppDefaultBackgroundURL = 'https://static.fischldesu.com/files/picture/121757860.jpg';
+const AppDefaultMinBackgroundURL = 'https://static.fischldesu.com/files/picture/121757860.min.jpg';
 let url:string | null = localStorage.getItem('bg-url');
 if(!url)
     url = AppDefaultBackgroundURL;
@@ -17,6 +18,7 @@ export default ()=> {
     },
 
     get Ref() { return AppBackgroundURL; },
+    get DefaultMinURL() { return AppDefaultMinBackgroundURL; },
     get DefaultURL() { return AppDefaultBackgroundURL; },
     RestoreDefault() {
       localStorage.setItem('bg-url', AppDefaultBackgroundURL);
