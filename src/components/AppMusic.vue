@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { getCurrentInstance, onMounted } from "vue";
-import { useAppMusic, useReference} from "@/elements";
+import {computed, onMounted} from "vue";
+import {useAppMusic, useReference} from "@/elements";
 import CFlipCard from "@/components/CFlipCard.vue";
+import {type MusicMetaData} from "@/util/MP3MetaReader.ts";
 
 const appMusic = useAppMusic();
 const appMusicCard = useReference(CFlipCard);
@@ -19,12 +20,9 @@ async function LoadMusicMetaData() {
   appMusic.source.playlist = await LoadURL();
 }
 
-onMounted(()=>{
-  const cardEle = appMusicCard.value?.$el as HTMLElement | null;
-  getCurrentInstance()?.proxy?.$el.appendChild(appMusic.element)
-  cardEle?.addEventListener('mouseleave', ()=>cardEle.removeAttribute('flip'))
-  LoadMusicMetaData().catch(err=> console.warn('Failed load metadata:', err));
-});
+const current = computed(()=>{
+  return appMusic.source.playlist[0] as MusicMetaData | null;
+})
 
 const action = {
   play:()=>{
@@ -48,10 +46,19 @@ defineExpose({
   action
 })
 
-if ('mediaSession' in navigator) {
-  navigator.mediaSession.setActionHandler('nexttrack', action.next);
-  navigator.mediaSession.setActionHandler('previoustrack', action.previous);
-}
+onMounted(()=>{
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.setActionHandler('nexttrack', action.next);
+    navigator.mediaSession.setActionHandler('previoustrack', action.previous);
+  }
+
+  const card = appMusicCard.value?.$el as HTMLElement | null;
+  const instance = card?.parentElement;
+  instance?.appendChild(appMusic.element)
+  card?.addEventListener('mouseleave', ()=>card.removeAttribute('flip'))
+
+  LoadMusicMetaData().catch(err=> console.warn('Failed load metadata:', err));
+});
 
 </script>
 
@@ -60,9 +67,10 @@ if ('mediaSession' in navigator) {
     <CFlipCard ref="appMusicCard"  style="width: 192px; height: 192px;" :vertical="true" :hover-flip="false">
         <template #default>
           <div class="app-music-face">
-            <button @click="appMusic.previous()" > ◀ </button>
+            <img v-if="(current && current.cover !== '')" class="app-music-cover" :src="current?.cover" alt="music cover">
+            <button @click="action.previous()" > ◀ </button>
             <button @click="action.play()" style="transform: rotate(90deg);">〓</button>
-            <button @click="appMusic.next()" > ▶ </button>
+            <button @click="action.next()" > ▶ </button>
             <button @click="action.flip()" > Flip </button>
           </div>
         </template>
@@ -81,6 +89,14 @@ if ('mediaSession' in navigator) {
   background-position: center;
 }
 
-
+.app-music-face>img.app-music-cover {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
 
 </style>
