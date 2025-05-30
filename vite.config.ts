@@ -10,7 +10,10 @@ export default defineConfig({
     vueDevTools(),
   ],
   server: {
-    host: '0.0.0.0'
+    host: '0.0.0.0',
+    headers: {
+      'Cache-Control': 'public, max-age=3600',
+    }
   },
   resolve: {
     alias: {
