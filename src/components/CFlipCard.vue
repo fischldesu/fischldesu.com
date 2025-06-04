@@ -21,6 +21,7 @@ defineProps({
 defineExpose({
   ToggleFlip: ()=>{
     instance.value?.toggleAttribute('flip');
+    return instance.value?.hasAttribute('flip') ?? false;
   }
 })
 

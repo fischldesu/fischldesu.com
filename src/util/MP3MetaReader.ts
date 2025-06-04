@@ -6,6 +6,60 @@ export interface MusicMetaData {
   cover: string;
 }
 
+function ParseAPICFrame(dataView: DataView, offset: number, size: number): string {
+  if (size <= 0) return '';
+
+  try {
+    let offset_ = offset;
+
+    const encoding = dataView.getUint8(offset_);
+    offset_++;
+
+    let mimeType = '';
+    while (offset_ < offset + size) {
+      const byte = dataView.getUint8(offset_);
+      if (byte === 0) break;
+      mimeType += String.fromCharCode(byte);
+      offset_++;
+    }
+
+    offset_ += 2;
+
+    if (encoding === 0 || encoding === 3) { // ISO-8859-1 或 UTF-8
+      while (offset_ < offset + size && dataView.getUint8(offset_) !== 0) {
+        offset_++;
+      }
+      offset_++; // 跳过null终止符
+    } else if (encoding === 1 || encoding === 2) { // UTF-16
+      while (offset_ < offset + size - 1) {
+        if (dataView.getUint8(offset_) === 0 && dataView.getUint8(offset_ + 1) === 0) {
+          break;
+        }
+        offset_ += 2;
+      }
+      offset_ += 2; // 跳过UTF-16的双字节null终止符
+    }
+
+    // 读取实际的图片数据
+    const imageDataLength = offset + size - offset_;
+    if (imageDataLength <= 0) return '';
+
+    const imageData = new Uint8Array(dataView.buffer, offset_, imageDataLength);
+
+    let binary = '';
+    const bytes = imageData;
+    const len = imageData.byteLength;
+    for (let i = 0; i < len; i++)
+      binary += String.fromCharCode(bytes[i]);
+
+    return `data:${mimeType};base64,${btoa(binary)}`;
+
+  } catch (e) {
+    console.warn('解析封面时出错:', e);
+    return '';
+  }
+}
+
 class MusicMetaDataReader {
   async read(url:string):Promise<MusicMetaData | null> {
     try {
@@ -80,6 +134,7 @@ class MusicMetaDataReader {
     let title = '';
     let artist = '';
     let album = '';
+    let cover = '';
     let offset = 10;
     const end = Math.min(offset + size, dataView.byteLength);
     while (offset < end - 10) {
@@ -102,6 +157,9 @@ class MusicMetaDataReader {
         case 'TALB': // Album
           album = metadata;
           break;
+        case 'APIC': // Attached Picture
+          cover = ParseAPICFrame(dataView, offset + 10, frameSize);
+          break;
       }
       offset += 10 + frameSize;
     }
@@ -113,7 +171,7 @@ class MusicMetaDataReader {
       title: title,
       artist: artist,
       album: album,
-      cover: ''
+      cover: cover
     }
   }
 

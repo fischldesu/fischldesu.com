@@ -100,7 +100,7 @@ class AppMusicData {
         title: title,
         artist: '...',
         album: '...',
-        cover: '...'
+        cover: ''
       });
 
       musicMetaReader.read(src).then(metaData => {
@@ -123,6 +123,16 @@ class AppMusicData {
 }
 
 const appMusic:AppMusicData = new AppMusicData();
+const playStatus = reactive({
+  paused: true
+})
+
+appMusic.element.addEventListener('pause', ()=>{
+  playStatus.paused = true;
+});
+appMusic.element.addEventListener('play', ()=>{
+  playStatus.paused = false;
+});
 
 export default function AppMusic() {
   return {
@@ -138,6 +148,13 @@ export default function AppMusic() {
     },
     get paused() {
       return appMusic.element.paused;
+    },
+    get reactive() {
+      return {
+        playStatus: playStatus,
+        playList: appMusic.playlist,
+
+      }
     }
   };
 }
